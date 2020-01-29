@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const Login = () => {
     const generateOauth = () => {
-        fetch(`https://github.com/login/oauth/authorize?client_id=fc0fa86c782526ec039c&client_secret=a4ec68c44ce2fd35b2943803991195725c5eb5ae`)
+        fetch(`https://github.com/login/oauth/authorize`)
             .then(resp => window.open(resp.url, "_blank"))
     }
 
