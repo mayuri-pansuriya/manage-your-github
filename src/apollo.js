@@ -6,12 +6,13 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { onError } from 'apollo-link-error';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 
-const httpLink = new HttpLink({
-  uri: 'https://api.github.com/graphql',
-});
+var httpuri = `https://api.github.com/graphql`;
+var wsuri = `ws://api.github.com/graphql`;
+
+const httpLink = new HttpLink({ uri: httpuri });
 
 const wsLink = new WebSocketLink({
-  uri: `ws://api.github.com/graphql`,
+  uri: wsuri,
   options: {
     reconnect: true,
   },
@@ -32,9 +33,7 @@ const authLink = new ApolloLink((operation, forward) => {
   operation.setContext(({ headers = {} }) => {
     const accessToken = localStorage.getItem('access_token');
 
-    if (accessToken) {
-      headers = { ...headers, 'Authorization': accessToken ? `bearer ${accessToken}`: '' };
-    }
+    if (accessToken) headers = { ...headers, 'Authorization': accessToken ? `bearer ${accessToken}` : '' };
 
     return { headers };
   });
@@ -42,33 +41,14 @@ const authLink = new ApolloLink((operation, forward) => {
   return forward(operation);
 });
 
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors) {
-    graphQLErrors.forEach(({ message }) => {
-      console.log('GraphQL error', message);
-
-      if (message === 'UNAUTHENTICATED') {
-        console.log("TCL: errorLink -> UNAUTHENTICATED");
-      }
-    });
-  }
-
-  if (networkError) {
-    console.log('Network error', networkError);
-
-    if (networkError.statusCode === 401) {
-      console.log("TCL: errorLink -> Network error");
-    }
-  }
+const errorLink = onError(({ gqlErr, networkError }) => {
+  if (gqlErr) gqlErr.map(({ message }) => (message === 'UNAUTHENTICATED') ? console.log("This request is not authenticated.") : null);
+  if (networkError) if (networkError.statusCode === 401) console.log("A network error occurred", networkError);
 });
 
-const link = ApolloLink.from([authLink, errorLink, terminatingLink]);
-
-const cache = new InMemoryCache();
-
 const client = new ApolloClient({
-  link,
-  cache,
+  link: ApolloLink.from([authLink, errorLink, terminatingLink]),
+  cache: new InMemoryCache(),
 });
 
 export default client;
