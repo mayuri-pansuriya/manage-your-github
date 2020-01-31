@@ -10,7 +10,7 @@ const Login = ({ setAccesstoken }) => {
 
   const FetchAccessToken = () => {
     fetch(
-      `https://github.com/login/oauth/access_token?client_id=fc0fa86c782526ec039c&&client_secret=a4ec68c44ce2fd35b2943803991195725c5eb5ae&&redirect_uri=http://localhost&&code=${
+      `https://github.com/login/oauth/access_token?client_id=fc0fa86c782526ec039c&&client_secret=a4ec68c44ce2fd35b2943803991195725c5eb5ae&&redirect_uri=http://damp-ridge-46292.herokuapp.com/&&code=${
         window.location.search.split("=")[1]
       }`,
       {
