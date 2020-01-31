@@ -20,6 +20,7 @@ const Login = ({ setAccesstoken }) => {
     )
       .then(resp => resp.json())
       .then(resp => {
+        console.log("TCL: FetchAccessToken -> resp.access_token", resp.access_token)
         localStorage.setItem("access_token", resp.access_token);
         setAccesstoken(resp.access_token);
       })

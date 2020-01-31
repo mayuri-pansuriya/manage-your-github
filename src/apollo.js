@@ -32,6 +32,7 @@ const terminatingLink = split(
 const authLink = new ApolloLink((operation, forward) => {
   operation.setContext(({ headers = {} }) => {
     const accessToken = localStorage.getItem('access_token');
+    alert("TCL: accessToken", accessToken)
 
     if (accessToken) headers = { ...headers, 'Authorization': accessToken ? `bearer ${accessToken}` : '' };
 
