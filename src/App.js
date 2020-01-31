@@ -16,7 +16,7 @@ const App = () => {
     <React.Fragment>
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">
-          Navbar
+          Manage Your Github
         </a>
         <button
           class="navbar-toggler"
@@ -27,19 +27,23 @@ const App = () => {
           aria-expanded="false"
           aria-label="Toggle navigation"
         ></button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+        <div className="collapse navbar-collapse " id="navbarSupportedContent">
+          <ul className="navbar-nav ml-auto d-flex">
+            <li className="nav-item active">
               {accessToken ? (
-                <button onClick={e => handleLogout()}>logout</button>
+                <button
+                  type="button"
+                  className="btn ml-auto btn-primary float-right"
+                  onClick={e => handleLogout()}
+                >
+                  logout
+                </button>
               ) : (
                 " "
               )}
             </li>
           </ul>
         </div>
-
-        <span class="navbar-toggler-icon"></span>
       </nav>
       {!accessToken ? (
         <li class="nav-item active">

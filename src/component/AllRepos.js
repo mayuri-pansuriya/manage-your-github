@@ -41,7 +41,7 @@ const AllRepos = () => {
   if (error) return <React.Fragment>Error Occurred</React.Fragment>;
 
   const unstarRepo = sr => {
-    // console.log("TCL: unstarRepo -> sr", sr)
+    // console.log("TCL: unstarRepo -> sr", sr);
     unstar({ variables: { id: sr.id } });
   };
 
@@ -50,7 +50,15 @@ const AllRepos = () => {
       <div>Starred Repo:</div>
       <ul className="list-group">
         {starredRepo.map(sr => (
-          <li className="list-group-item">- {sr.nameWithOwner}</li>
+          <li className="list-group-item">
+            - {sr.nameWithOwner}
+            <button
+              className="btn btn-primary float-right"
+              onClick={e => unstarRepo(sr)}
+            >
+              unstar
+            </button>
+          </li>
         ))}
       </ul>
     </div>
@@ -87,9 +95,19 @@ const SearchRepos = () => {
         value={searchText}
         onInput={e => changeSearchText(e.target.value)}
       />
-      {searchedRepo.map(sr => (
-        <div onClick={e => starRepo(sr)}>{sr.node.nameWithOwner}</div>
-      ))}
+      <ul className="list-group">
+        {searchedRepo.map(sr => (
+          <li className="list-group-item">
+            - {sr.node.nameWithOwner}
+            <button
+              className="btn btn-primary float-right"
+              onClick={e => starRepo(sr)}
+            >
+              star
+            </button>
+          </li>
+        ))}
+      </ul>
     </React.Fragment>
   );
 };
