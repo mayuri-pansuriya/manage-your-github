@@ -7,7 +7,6 @@ const App = () => {
   const [accessToken, setAccesstoken] = useState(
     localStorage.getItem("access_token")
   );
-  console.log(accessToken);
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     window.location.href = "/";

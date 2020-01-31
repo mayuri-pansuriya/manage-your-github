@@ -16,18 +16,19 @@ import {
 import { get } from "lodash";
 
 const ApolloProv = () => {
+  const [starredRepo, setStarredRepo] = useState([]);
+
   return (
     <ApolloProvider client={client}>
       <ApolloHooksProvider client={client}>
-        <AllRepos />
-        <SearchRepos />
+        <AllRepos starredRepo={starredRepo} setStarredRepo={setStarredRepo} />
+        <SearchRepos starredRepo={starredRepo} setStarredRepo={setStarredRepo} />
       </ApolloHooksProvider>
     </ApolloProvider>
   );
 };
 
-const AllRepos = () => {
-  const [starredRepo, setStarredRepo] = useState([]);
+const AllRepos = ({ starredRepo, setStarredRepo }) => {
   const { loading, error, data } = useQuery(GET_STARRED_REPOSITORIES, {
     variables: { number_of_repos: 100 }
   });
@@ -36,13 +37,21 @@ const AllRepos = () => {
   useEffect(() => {
     setStarredRepo(get(data, "viewer.starredRepositories.nodes", []));
   }, [data]);
-
+  
   if (loading) return <React.Fragment>Loading..</React.Fragment>;
   if (error) return <React.Fragment>Error Occurred</React.Fragment>;
-
+  
   const unstarRepo = sr => {
-    // console.log("TCL: unstarRepo -> sr", sr);
     unstar({ variables: { id: sr.id } });
+    let id = "";
+    id = starredRepo.map(srp => {
+      if(srp.id === sr.id) {
+        id = srp.id;
+      }
+    })
+    let aa = starredRepo;
+    aa.splice(id, 1);
+    setStarredRepo(aa);
   };
 
   return (
@@ -65,7 +74,7 @@ const AllRepos = () => {
   );
 };
 
-const SearchRepos = () => {
+const SearchRepos = ({ starredRepo, setStarredRepo }) => {
   const [searchText, setSearchText] = useState("");
   const [searchedRepo, setSearchedRepo] = useState([]);
   const [addStars] = useMutation(ADD_STAR);
@@ -86,6 +95,7 @@ const SearchRepos = () => {
 
   const starRepo = sr => {
     addStars({ variables: { id: sr.node.id } });
+    setStarredRepo([...starredRepo, {...sr.node}])
   };
 
   return (
